@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -10,7 +10,7 @@ CORPO = {"nome": "Ana", "text": "não entendi nada"}
 def test_raiz_responde_ok(client):
     resposta = client.get("/")
     assert resposta.status_code == 200
-    assert resposta.json() == {"status": "ok"}
+    assert resposta.json() == {"status": "ok", "version": "dev"}
 
 
 def test_post_predictions_devolve_predicao_de_cada_modelo_e_mensagem(client):
@@ -51,7 +51,7 @@ def _enviar_com_data(client, texto, quando):
 
 
 def test_get_predictions_devolve_mais_recentes_primeiro(client):
-    base = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    base = datetime(2026, 1, 1, tzinfo=UTC)
     _enviar_com_data(client, "antiga", base)
     _enviar_com_data(client, "nova", base + timedelta(hours=1))
 
@@ -63,7 +63,7 @@ def test_get_predictions_devolve_mais_recentes_primeiro(client):
 
 
 def test_get_predictions_respeita_limit(client):
-    base = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    base = datetime(2026, 1, 1, tzinfo=UTC)
     for i in range(3):
         _enviar_com_data(client, f"msg{i}", base + timedelta(minutes=i))
 
