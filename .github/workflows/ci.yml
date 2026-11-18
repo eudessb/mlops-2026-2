@@ -17,7 +17,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:
+  workflow_call:
 
 # Princípio do menor privilégio: o GITHUB_TOKEN só pode LER o repositório.
 permissions:
@@ -36,7 +36,7 @@ jobs:
   test:
     name: Testes (unit + integration)
     runs-on: ubuntu-latest
-    timeout-minutes: 20   # evita job travado gastando minutos
+    timeout-minutes: 20 # evita job travado gastando minutos
     steps:
       # Baixa o código do repositório para dentro do runner
       - name: Checkout do código
@@ -88,7 +88,7 @@ jobs:
   # -------------------------------------------------------------
   smoke:
     name: Smoke test (docker compose + e2e)
-    needs: test   # só roda se o job "test" passou
+    needs: test # só roda se o job "test" passou
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 40
